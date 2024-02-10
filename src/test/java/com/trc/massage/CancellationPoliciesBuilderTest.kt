@@ -253,14 +253,14 @@ class CancellationPoliciesBuilderTest {
                 CancellationPolicy().apply {
                     date = massageDate.minusDays(3)
                     price = Price().apply {
-                        amount = 9.0
+                        amount = 5.0
                         currency = "USD"
                     }
                 },
                 CancellationPolicy().apply {
                     date = massageDate.minusDays(3)
                     price = Price().apply {
-                        amount = 5.0
+                        amount = 9.0
                         currency = "USD"
                     }
                 }
