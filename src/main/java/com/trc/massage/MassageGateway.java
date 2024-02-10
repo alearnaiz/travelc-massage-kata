@@ -7,6 +7,7 @@ import com.trc.massage.binding.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class MassageGateway {
@@ -15,7 +16,7 @@ public class MassageGateway {
     private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.create();
 
     public Response getMassages(LocalDate date) {
-        WebClient webClient = WebClient.create(ENDPOINT + "quote/yyyy-MM-dd", List.of(new JacksonJsonProvider(OBJECT_MAPPER)));
+        WebClient webClient = WebClient.create(ENDPOINT + String.format("quote/%s", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))), List.of(new JacksonJsonProvider(OBJECT_MAPPER)));
         return webClient.get(Response.class);
     }
 
