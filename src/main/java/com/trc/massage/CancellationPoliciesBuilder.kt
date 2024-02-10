@@ -20,7 +20,7 @@ object CancellationPoliciesBuilder {
                 } else if (cancellationPolicy.date.isBefore(LocalDate.now())) {
                     result.add(MyCancellationPolicy(LocalDate.now(), cancellationPolicy.price.amount, cancellationPolicy.price.currency))
                     continue
-                }  else if (cancellationPolicy.date.isEqual(date)) {
+                } else if (cancellationPolicy.date.isEqual(date)) {
                     result.add(MyCancellationPolicy(date, massage.price.amount, massage.price.currency))
                     continue
                 } else if (cancellationPolicy.date.isAfter(date)) {
