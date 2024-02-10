@@ -123,6 +123,42 @@ class CancellationPoliciesBuilderTest {
         assertThat(cancellationPolicies[0].currency, Is("USD"))
     }
 
+    @Test
+    fun `when two cancellation policies are in the same day should add the higher price`() {
+        val massageDate = LocalDate.now().plusDays(23)
+        val massage = Massage().apply {
+            price = Price().apply {
+                amount = 10.0
+                currency = "USD"
+            }
+            cancellationPolicies = listOf(
+                    CancellationPolicy().apply {
+                        date = massageDate.minusDays(3)
+                        price = Price().apply {
+                            amount = 5.0
+                            currency = "USD"
+                        }
+                    },
+                    CancellationPolicy().apply {
+                        date = massageDate.minusDays(3)
+                        price = Price().apply {
+                            amount = 9.0
+                            currency = "USD"
+                        }
+                    }
+            )
+        }
+
+        val cancellationPolicies = CancellationPoliciesBuilder.getCancellationPolicies(massageDate, massage)
+
+        assertThat(cancellationPolicies, hasSize(2))
+        assertThat(cancellationPolicies[0].date, Is(massageDate.minusDays(3)))
+        assertThat(cancellationPolicies[0].amount, Is(9.0))
+        assertThat(cancellationPolicies[0].currency, Is("USD"))
+        assertThat(cancellationPolicies[1].date, Is(massageDate))
+        assertThat(cancellationPolicies[1].amount, Is(10.0))
+        assertThat(cancellationPolicies[1].currency, Is("USD"))
+    }
 
     @Test
     fun `when cancellation policy is before today should be added but from today`() {
@@ -238,43 +274,6 @@ class CancellationPoliciesBuilderTest {
         assertThat(cancellationPolicies[0].currency, Is("USD"))
         assertThat(cancellationPolicies[1].date, Is(massageDate))
         assertThat(cancellationPolicies[1].amount, Is(12.0))
-        assertThat(cancellationPolicies[1].currency, Is("USD"))
-    }
-
-    @Test
-    fun `when two cancellation policies are in the same day should add the higher price`() {
-        val massageDate = LocalDate.now().plusDays(23)
-        val massage = Massage().apply {
-            price = Price().apply {
-                amount = 10.0
-                currency = "USD"
-            }
-            cancellationPolicies = listOf(
-                CancellationPolicy().apply {
-                    date = massageDate.minusDays(3)
-                    price = Price().apply {
-                        amount = 5.0
-                        currency = "USD"
-                    }
-                },
-                CancellationPolicy().apply {
-                    date = massageDate.minusDays(3)
-                    price = Price().apply {
-                        amount = 9.0
-                        currency = "USD"
-                    }
-                }
-            )
-        }
-
-        val cancellationPolicies = CancellationPoliciesBuilder.getCancellationPolicies(massageDate, massage)
-
-        assertThat(cancellationPolicies, hasSize(2))
-        assertThat(cancellationPolicies[0].date, Is(massageDate.minusDays(3)))
-        assertThat(cancellationPolicies[0].amount, Is(9.0))
-        assertThat(cancellationPolicies[0].currency, Is("USD"))
-        assertThat(cancellationPolicies[1].date, Is(massageDate))
-        assertThat(cancellationPolicies[1].amount, Is(10.0))
         assertThat(cancellationPolicies[1].currency, Is("USD"))
     }
 
